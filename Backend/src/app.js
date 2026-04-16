@@ -17,9 +17,10 @@ app.get("/", (req, res) => {
   res.send("Backend is running 🚀");
 });
 app.use(cors({
-  origin: '*',
-  credentials: true
-}))
+  origin: "https://music-player-git-main-vashu-guptas-projects.vercel.app",
+  credentials:true
+}));
+
 app.use('/api/auth', authRouter)
 app.use('/api',homeRouter)
 app.use('/api/music',authMiddleware,upload.single('file'), musicRouter)
