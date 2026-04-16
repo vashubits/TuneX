@@ -13,7 +13,7 @@ const ArtistSong = () => {
     
         const fetchData = async () => {
           try {
-            const musicRes = await axios.post(`http://localhost:3000/api/${param.id}/musics`)
+            const musicRes = await axios.post(`https://music-player-ew1o.onrender.com/api/${param.id}/musics`)
     
             setmusic(musicRes.data)
             

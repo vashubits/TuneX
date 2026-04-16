@@ -24,7 +24,7 @@ const Login = () => {
 
     try {
       const res = await axios.post(
-        'http://localhost:3000/api/auth/login',
+        'https://music-player-ew1o.onrender.com/api/auth/login',
         data,
         { withCredentials: true }
       )

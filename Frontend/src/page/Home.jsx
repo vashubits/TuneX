@@ -14,8 +14,8 @@ const Home = () => {
 
     const fetchData = async () => {
       try {
-        const musicRes = await axios.get('http://localhost:3000/api/music')
-        const albumRes = await axios.get('http://localhost:3000/api/artist')
+        const musicRes = await axios.get('https://music-player-ew1o.onrender.com/api/music')
+        const albumRes = await axios.get('https://music-player-ew1o.onrender.com/api/artist')
 
         setMusic(musicRes.data)
         setAlbums(albumRes.data)

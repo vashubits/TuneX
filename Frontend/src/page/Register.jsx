@@ -32,7 +32,7 @@ const Register = () => {
 
     try {
       const res = await axios.post(
-        'http://localhost:3000/api/auth/register',
+        'https://music-player-ew1o.onrender.com/api/auth/register',
         data
       )
 

@@ -35,7 +35,7 @@ if (loading) return
     setloading(true)
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/music/uploadmusic",
+        "https://music-player-ew1o.onrender.com/api/music/uploadmusic",
         formData,
         {
           withCredentials: true,

@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        await axios.get("http://localhost:3000/api/auth/verify", {
+        await axios.get("https://music-player-ew1o.onrender.com/api/auth/verify", {
           withCredentials: true, // 
         });
 

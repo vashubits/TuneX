@@ -35,7 +35,7 @@ if(loading)return
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/music/createalbum",
+        "https://music-player-ew1o.onrender.com/api/music/createalbum",
         formData,
         {
           withCredentials: true,
