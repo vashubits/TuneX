@@ -8,7 +8,7 @@ async function userRegister(req, res) {
   try {
     const { username, email, password , role ='user' } = req.body
      if (!email || !password || !username) {
-      return res.status(400).json({ message: "All fields are required" })
+      return res.status(400).json({  errors: errors.array() })
     }
 
     const hash = await bcrypt.hash(password, 10)
@@ -20,7 +20,7 @@ async function userRegister(req, res) {
     })
 
     if (existingUser) {
-      return res.status(400).json({ message: 'Username or Email already exists' })
+      return res.status(400).json({ errors: errors.array() })
     }
 
     await userModel.create({
