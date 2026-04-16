@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Navbar from "./page/Navbar"
-import Register from "./page/Register"
-import Login from "./page/Login"
-import Upload from "./page/uploadMusic"
-import CreateAlbum from "./page/createAlbum"
-import Home from "./page/Home"
-import ProtectedRoute from "./Routes/protection.route"
-import ArtistSong from "./page/artistSong"
+import Navbar from "./page/navbar.jsx"
+import Register from "./page/Register.jsx"
+import Login from "./page/Login.jsx"
+import Upload from "./page/uploadMusic.jsx"
+import CreateAlbum from "./page/createAlbum.jsx"
+import Home from "./page/home.jsx"
+import ProtectedRoute from "./Routes/protection.route.jsx"
+import ArtistSong from "./page/artistSong.jsx"
 
 const App = () => {
 
