@@ -16,7 +16,7 @@ const registerValidator = [
 
   body('role')
     .optional()
-    .isIn(['user', 'artist']).withMessage('Role must be user or artist')
+    .isIn(['user', 'Artist']).withMessage('Role must be user or artist')
 ]
 
 
@@ -25,7 +25,7 @@ const validate = (req, res, next) => {
 
   if (!errors.isEmpty()) {
     return res.status(400).json({
-      errors: errors.array()
+      message: errors.message
     })
   }
 
