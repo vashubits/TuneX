@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import '../css/Home.css'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import '../css/Home.css'
 
 const Home = () => {
 
   const [music, setMusic] = useState([])
   const [albums, setAlbums] = useState([])
+  const [currentAudio, setCurrentAudio] = useState(null) 
+
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -20,8 +21,6 @@ const Home = () => {
         setMusic(musicRes.data)
         setAlbums(albumRes.data)
 
-        
-
       } catch (error) {
         console.log(error)
       }
@@ -31,10 +30,22 @@ const Home = () => {
 
   }, [])
 
+  const handlePlay = (audio) => {
+    if (currentAudio && currentAudio !== audio) {
+      currentAudio.pause()
+    }
+    setCurrentAudio(audio)
+  }
+
+  const handlePause = (audio) => {
+    if (currentAudio === audio) {
+      setCurrentAudio(null)
+    }
+  }
+
   return (
     <div className="home">
 
-      {/* HERO */}
       <div className="hero">
         <h1>🎵 Welcome to MusicApp</h1>
         <p>Listen, Upload and Create your favorite music albums easily.</p>
@@ -54,7 +65,12 @@ const Home = () => {
               <p>Enjoy your music</p>
             </div>
 
-            <audio controls className="audio">
+            <audio
+              controls
+              className="audio"
+              onPlay={(e) => handlePlay(e.target)}
+              onPause={(e) => handlePause(e.target)}
+            >
               <source src={item.uri} type="audio/mp3" />
             </audio>
 
@@ -63,33 +79,34 @@ const Home = () => {
 
       </div>
 
-<h2 className="sectionTitle">📀 Artist</h2>
+      <h2 className="sectionTitle">📀 Artist</h2>
 
-<div className="musicGrid">
+      <div className="musicGrid">
 
-  {albums.map((item) => (
-    <div
-      className="musicCard albumCard"
-      key={item._id}
-      onClick={() =>  navigate(`/artist/${item.userId}`)}
-    >
+        {albums.map((item) => (
+          <div
+            className="musicCard albumCard"
+            key={item._id}
+            onClick={() => navigate(`/artist/${item.userId}`)}
+          >
 
-      <div className="albumImageWrapper">
-        <img
-          src={item.uri}
-          alt="album"
-          className="albumImage"
-        />
+            <div className="albumImageWrapper">
+              <img
+                src={item.uri}
+                alt="album"
+                className="albumImage"
+              />
+            </div>
+
+            <div className="musicInfo">
+              <h3>{item.albumName}</h3>
+              <p>Tap to view artist music</p>
+            </div>
+
+          </div>
+        ))}
+
       </div>
-
-      <div className="musicInfo">
-        <h3>{item.albumName}</h3>
-        <p>Tap to view artist music</p>
-      </div>
-
-    </div>
-  ))}
-</div>
 
     </div>
   )
