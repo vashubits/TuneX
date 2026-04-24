@@ -8,7 +8,7 @@ const Navbar = () => {
   return (
     <nav className="nav">
       
-      <div className="logo">🎵 MusicApp</div>
+      <div className="logo">TuneX</div>
 
       <div className="hamburger" onClick={() => setOpen(!open)}>
         ☰

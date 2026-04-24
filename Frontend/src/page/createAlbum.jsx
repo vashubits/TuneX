@@ -7,7 +7,7 @@ const CreateAlbum = () => {
   const navigate = useNavigate()
 
   const [albumName, setAlbumName] = useState('')
-  const [file, setFile] = useState(null)
+  const [imageFile, setimageFile] = useState(null)
   const [loading, setloading] = useState(false)
 
   const [popup, setPopup] = useState({
@@ -18,8 +18,9 @@ const CreateAlbum = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-if(loading)return
-    if (!albumName || !file) {
+    if (loading) return
+
+    if (!albumName || !imageFile) {
       setPopup({
         show: true,
         message: "Album name and image required",
@@ -30,7 +31,8 @@ if(loading)return
 
     const formData = new FormData()
     formData.append("albumName", albumName)
-    formData.append("imageFile", file)
+    formData.append("imageFile", imageFile)
+
     setloading(true)
 
     try {
@@ -38,10 +40,7 @@ if(loading)return
         "https://music-player-ew1o.onrender.com/api/music/createalbum",
         formData,
         {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
+          withCredentials: true
         }
       )
 
@@ -51,9 +50,7 @@ if(loading)return
         type: "success"
       })
 
-      setTimeout(() => {
-        navigate('/')
-      }, 2000)
+      setTimeout(() => navigate('/'), 2000)
 
     } catch (err) {
       setPopup({
@@ -61,6 +58,8 @@ if(loading)return
         message: err.response?.data?.message || "Album creation failed",
         type: "error"
       })
+    } finally {
+      setloading(false)
     }
 
     setTimeout(() => {
@@ -69,33 +68,37 @@ if(loading)return
   }
 
   return (
-    <div style={styles.wrapper}>
+    <div className="h-screen flex justify-center items-center bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] text-white">
 
-      <div style={styles.card}>
-        <h2 style={styles.title}>🎧 Create Album</h2>
+      <div className="bg-[#1e1e1e] p-8 rounded-xl w-[350px] shadow-xl text-center">
 
-        <form onSubmit={handleSubmit} style={styles.form}>
+        <h2 className="mb-5 text-[#1DB954] text-xl font-bold">🎧 Create Album</h2>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
           <input
             type="text"
             placeholder="Enter Album Name"
             value={albumName}
             onChange={(e) => setAlbumName(e.target.value)}
-            style={styles.input}
+            className="p-3 rounded-lg border border-gray-300 text-black"
             required
           />
 
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => setFile(e.target.files[0])}
-            placeholder='no choose file'
-            style={styles.file}
+            onChange={(e) => setimageFile(e.target.files[0])}
+            className="p-2 rounded-lg bg-white text-gray-800 border border-gray-600 cursor-pointer"
             required
           />
 
-          <button style={styles.button}>
-            Create Album 🚀
+          <button
+            disabled={loading}
+            className={`p-3 rounded-lg font-bold transition 
+              ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#1DB954] hover:bg-green-600 text-black'}`}
+          >
+            {loading ? "Creating..." : "Create Album 🚀"}
           </button>
 
         </form>
@@ -103,86 +106,16 @@ if(loading)return
 
       {/* Popup */}
       {popup.show && (
-        <div style={{
-          ...styles.popup,
-          background: popup.type === 'success' ? '#1DB954' : '#ff4d4d'
-        }}>
+        <div
+          className={`fixed top-24 left-5 px-5 py-3 rounded-lg font-bold text-white
+          ${popup.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}
+        >
           {popup.message}
         </div>
       )}
 
     </div>
   )
-}
-
-const styles = {
-  wrapper: {
-    height: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    background: 'linear-gradient(135deg, #0f0f0f, #1a1a1a)',
-    color: '#fff'
-  },
-
-  card: {
-    background: '#1e1e1e',
-    padding: '30px',
-    borderRadius: '12px',
-    width: '350px',
-    boxShadow: '0 0 20px rgba(0,0,0,0.5)',
-    textAlign: 'center'
-  },
-
-  title: {
-    marginBottom: '20px',
-    color: '#1DB954'
-  },
-
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px'
-  },
-
-  input: {
-    padding: '12px',
-    borderRadius: '8px',
-    border: '1px solid #ccc'
-  },
-
-  file: {
-    padding: '10px',
-    color : "#000",
-    borderRadius: '8px',
-    background: '#fff',
-    border: '1px solid #444',
-  cursor: 'pointer'
-  },
-
-
-
-
-  button: {
-    padding: '12px',
-    background: '#1DB954',
-    border: 'none',
-    borderRadius: '8px',
-    color: '#000',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: '0.3s'
-  },
-
-  popup: {
-    position: 'fixed',
-    top: '100px',
-    left: '20px',
-    color: '#fff',
-    padding: '12px 20px',
-    borderRadius: '8px',
-    fontWeight: 'bold'
-  }
 }
 
 export default CreateAlbum

@@ -7,7 +7,7 @@ const Upload = () => {
   const navigate = useNavigate()
 
   const [musicName, setMusicName] = useState('')
-  const [file, setFile] = useState(null)
+  const [musicFile, setmusicFile] = useState(null)
   const [imageFile, setimageFile] = useState(null)
   const [loading, setloading] = useState(false)
 
@@ -20,10 +20,20 @@ const Upload = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (loading) return
-    if (!file || !musicName) {
+
+    if (!musicFile || !musicName || !imageFile) {
       setPopup({
         show: true,
-        message: "Music name and file required",
+        message: "Music name, audio file and image required",
+        type: "error"
+      })
+      return
+    }
+
+    if (musicFile.size > 7 * 1024 * 1024) {
+      setPopup({
+        show: true,
+        message: "Music file too large (max 7 MB)",
         type: "error"
       })
       return
@@ -31,19 +41,17 @@ const Upload = () => {
 
     const formData = new FormData()
     formData.append("musicName", musicName)
-    formData.append("musicFile", file)
+    formData.append("musicFile", musicFile)
     formData.append("imageFile", imageFile)
 
     setloading(true)
+
     try {
       const res = await axios.post(
         "https://music-player-ew1o.onrender.com/api/music/uploadmusic",
         formData,
         {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
+          withCredentials: true
         }
       )
 
@@ -56,12 +64,13 @@ const Upload = () => {
       setTimeout(() => navigate('/'), 2000)
 
     } catch (err) {
-
       setPopup({
         show: true,
         message: err.response?.data?.message || "Upload failed",
         type: "error"
       })
+    } finally {
+      setloading(false)
     }
 
     setTimeout(() => {
@@ -70,124 +79,62 @@ const Upload = () => {
   }
 
   return (
-    <div style={styles.wrapper}>
+    <div className="h-screen flex justify-center items-center bg-gradient-to-br from-[#0f0f0f] to-[#1a1a1a] text-white">
 
-      <div style={styles.card}>
-        <h2 style={styles.title}>🎵 Upload Music</h2>
+      <div className="bg-[#1e1e1e] p-8 rounded-xl w-[350px] shadow-xl text-center">
 
-        <form onSubmit={handleSubmit} style={styles.form}>
+        <h2 className="mb-5 text-[#1DB954] text-xl font-bold">🎵 Upload Music</h2>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
 
           <input
             type="text"
             placeholder="Enter Music Name"
             value={musicName}
             onChange={(e) => setMusicName(e.target.value)}
-            style={styles.input}
+            className="p-3 rounded-lg border border-gray-300 text-black"
             required
           />
 
           <input
             type="file"
             accept="image/*"
-            placeholder='no choose file'
             onChange={(e) => setimageFile(e.target.files[0])}
-            style={styles.file}
+            className="p-2 rounded-lg bg-white text-gray-800 border border-gray-600 cursor-pointer"
             required
           />
+
           <input
             type="file"
             accept="audio/*"
-            placeholder='no choose file'
-            onChange={(e) => setFile(e.target.files[0])}
-            style={styles.file}
+            onChange={(e) => setmusicFile(e.target.files[0])}
+            className="p-2 rounded-lg bg-white text-gray-800 border border-gray-600 cursor-pointer"
             required
           />
-          <button style={styles.button}>
-            Upload 🚀
+
+          <button
+            disabled={loading}
+            className={`p-3 rounded-lg font-bold transition 
+              ${loading ? 'bg-gray-500 cursor-not-allowed' : 'bg-[#1DB954] hover:bg-green-600 text-black'}`}
+          >
+            {loading ? "Uploading..." : "Upload 🚀"}
           </button>
 
         </form>
       </div>
 
+      {/* Popup */}
       {popup.show && (
-        <div style={{
-          ...styles.popup,
-          background: popup.type === 'success' ? '#1DB954' : '#ff4d4d'
-        }}>
+        <div
+          className={`fixed top-24 left-5 px-5 py-3 rounded-lg font-bold text-white
+          ${popup.type === 'success' ? 'bg-green-500' : 'bg-red-500'}`}
+        >
           {popup.message}
         </div>
       )}
 
     </div>
   )
-}
-
-const styles = {
-  wrapper: {
-    height: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    background: 'linear-gradient(135deg, #0f0f0f, #1a1a1a)',
-    color: '#fff'
-  },
-
-  card: {
-    background: '#1e1e1e',
-    padding: '30px',
-    borderRadius: '12px',
-    width: '350px',
-    boxShadow: '0 0 20px rgba(0,0,0,0.5)',
-    textAlign: 'center'
-  },
-
-  title: {
-    marginBottom: '20px',
-    color: '#1DB954'
-  },
-
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px'
-  },
-
-  input: {
-    padding: '12px',
-    borderRadius: '8px',
-    border: "1px solid #ccc"
-
-  },
-
-  file: {
-    padding: '10px',
-    borderRadius: '8px',
-    background: '#fff',
-    color: '#2a2a2a',
-    border: '1px solid #444',
-    cursor: 'pointer'
-  },
-
-  button: {
-    padding: '12px',
-    background: '#1DB954',
-    border: 'none',
-    borderRadius: '8px',
-    color: '#000',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    transition: '0.3s'
-  },
-
-  popup: {
-    position: 'fixed',
-    top: '100px',
-    left: '20px',
-    color: '#fff',
-    padding: '12px 20px',
-    borderRadius: '8px',
-    fontWeight: 'bold'
-  }
 }
 
 export default Upload
