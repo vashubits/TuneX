@@ -11,24 +11,34 @@ async function uploadMusic(req, res) {
     })
 
     const user = req.user
-    const file = req.file
+    const musicFile = req.musicFile
+    const imageFile = req.imageFile
 
     if (req.user.role !== 'artist') {
       return res.status(403).json({ message: "Only artist can upload music" })
     }
 
-    if (!file) {
-      return res.status(400).json({ message: "No file uploaded" })
+    if (!musicFile) {
+      return res.status(400).json({ message: "No musicFile uploaded" })
+    }
+    if (!imageFile) {
+      return res.status(400).json({ message: "No imageFile uploaded" })
     }
 
-    const response = await imagekit.files.upload({
-      file: file.buffer.toString('base64'),
-      fileName: file.originalname,
+    const musicResponse = await imagekit.files.upload({
+      file: musicFile.buffer.toString('base64'),
+      fileName: musicFile.originalname,
       folder: '/Music_Player/Music'
+    })
+    const imageResponse = await imagekit.files.upload({
+      file: imageFile.buffer.toString('base64'),
+      fileName: imageFile.originalname,
+      folder: '/Music_Player/Music-Image'
     })
 
     await musicModel.create({
-      uri: response.url,
+      musicUri: musicResponse.url,
+      imageUri: imageResponse.url,
       musicName: req.body.musicName,
       userId: user.id
     })
@@ -46,7 +56,7 @@ async function uploadMusic(req, res) {
 
 async function createAlbum(req, res) {
   const albumName  = req.body.albumName
-  const file = req.file
+  const imageFile = req.imageFile
  
 
   const imagekit = new ImageKit({
@@ -59,19 +69,19 @@ async function createAlbum(req, res) {
 
   
 
-  if (!file) {
+  if (!imageFile) {
     return res.status(400).json({ message: "No file uploaded" })
   }
 
   try {
     const response = await imagekit.files.upload({
-      file: file.buffer.toString('base64'),
-      fileName: file.originalname,
+      file: imageFile.buffer.toString('base64'),
+      fileName: imageFile.originalname,
       folder: '/Music_Player/Album'
     })
 
     await albumModel.create({
-      uri: response.url,
+      imageUri: response.url,
       albumName,
       userId: req.user.id
     })
