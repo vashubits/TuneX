@@ -1,16 +1,14 @@
 const express = require('express')  
 const router = express.Router()
-const { uploadMusic, createAlbum } = require('../controller/music.controller')
+const multer = require('multer')
+const uploadmusic = require("../controller/upload.controller") 
+
 const upload = multer({ storage: multer.memoryStorage() })
 
 
 
-
-router.post('/uploadmusic', upload.fields([
-    { name: 'musicFile', maxCount: 1 },
-    { name: 'imageFile', maxCount: 1 }
-  ]),uploadMusic)
-router.post('/createalbum', upload.single('imageFile'),createAlbum)
+router.post('/uploadmusic',upload.fields([{name:'musicFile'},{name:'imageFile'}]),uploadmusic.uploadMusic)
+router.post('/createalbum',upload.single('imageFile'),uploadmusic.createAlbum)
 
 
 module.exports = router

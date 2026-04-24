@@ -5,11 +5,11 @@ const albumModel = require('../model/album.model')
 
 
 async function uploadMusic(req, res) {
+  console.log(req.files)
   try {
     const imagekit = new ImageKit({
       privateKey: process.env.IMAGEKIT_PRIVATE_KEY
     })
-
     const user = req.user
     const musicFile = req.files?.musicFile?.[0]
     const imageFile = req.files?.imageFile?.[0]

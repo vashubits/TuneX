@@ -3,13 +3,11 @@ const authRouter = require('./routes/auth.route')
 const cookieParser = require('cookie-parser')
 const app = express()
 const cors = require('cors')
-const multer = require('multer')
 const homeRouter = require('./routes/musics.route')
 const authMiddleware = require('./middleware/auth.middleware')
 const musicRouter = require('./routes/uploadAlbum.route')
 
 
-const upload = multer({storage:multer.memoryStorage()})
 app.use(express.static("public"))
 
 app.use(cors({
