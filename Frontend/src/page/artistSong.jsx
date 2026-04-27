@@ -6,28 +6,33 @@ import { useParams } from 'react-router-dom'
 import '../css/artistSong.css'
 
 const ArtistSong = () => {
- const param = useParams()
-    const [music, setmusic] = useState([])
-    useEffect(() => {
-        
-    
-        const fetchData = async () => {
-          try {
-            const musicRes = await axios.post(`https://music-player-ew1o.onrender.com/api/${param.id}/musics`)
-    
-            setmusic(musicRes.data)
-            
-    
-    
-          } catch (error) {
-            console.log(error)
-          }
-        }
-    
-        fetchData()
-    
-      }, [])
-    
+  const param = useParams()
+  const [currentSong, setCurrentSong] = useState(null)
+  const [music, setmusic] = useState([])
+  const handleMusic = (item) => {
+    setCurrentSong(item.musicUri)
+
+  }
+  useEffect(() => {
+
+
+    const fetchData = async () => {
+      try {
+        const musicRes = await axios.post(`https://music-player-ew1o.onrender.com/api/${param.id}/musics`)
+
+        setmusic(musicRes.data)
+
+
+
+      } catch (error) {
+        console.log(error)
+      }
+    }
+
+    fetchData()
+
+  }, [])
+
   return (
     <div className='artistSong'>
       <h2 className="sectionTitle"> Artist Music</h2>
@@ -35,23 +40,35 @@ const ArtistSong = () => {
       <div className="musicGrid">
 
         {music.map((item) => (
-          <div className="musicCard" key={item._id}>
+          <div
+            className=" albumCard"
+            key={item._id}
+            onClick={() => handleMusic(item)}
+          >
 
-            <div className="musicIcon">🎶</div>
+            <div className="albumImageWrapper">
+              <img
+                src={item.imageUri}
+                alt="album"
+                className="albumImage"
+              />
+            </div>
 
             <div className="musicInfo">
               <h3>{item.musicName}</h3>
-              <p>Enjoy your music</p>
+              <p>Tap to play music</p>
             </div>
-
-            <audio controls className="audio">
-              <source src={item.uri} type="audio/mp3" />
-            </audio>
 
           </div>
         ))}
 
+
       </div>
+      {currentSong && (
+        <div className="seekbar">
+          <audio src={currentSong} controls autoPlay />
+        </div>
+      )}
 
     </div>
   )

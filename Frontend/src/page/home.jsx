@@ -66,7 +66,7 @@ const Home = () => {
 
             <div className="musicInfo">
               <h3>{item.musicName}</h3>
-              <p>Tap to view artist music</p>
+              <p>Tap to play music</p>
             </div>
 
           </div>
