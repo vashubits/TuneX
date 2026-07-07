@@ -1,6 +1,6 @@
 # 🎵 TuneX – Full-Stack Music Player
 
-**Live Demo:** [[music-player-beige-xi.vercel.app](https://music-player-beige-xi.vercel.app)](https://music-player-git-main-vashu-guptas-projects.vercel.app/)
+**Live Demo:** https://music-player-git-main-vashu-guptas-projects.vercel.app/
 
 ---
 
